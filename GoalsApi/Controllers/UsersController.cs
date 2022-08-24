@@ -1,3 +1,5 @@
+using GoalsDomain.UseCases;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoalsApi.Controllers;
@@ -6,13 +8,22 @@ namespace GoalsApi.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
+    private readonly UsersUseCases usersUseCases;
+   
+    public UsersController()
+    {
+        this.usersUseCases = new UsersUseCases();
+    }
+
     [HttpPost]
-    public ActionResult AddUser() {
-        return Ok("Add User");
+    public async Task<ActionResult<string>> SignUp() {
+        var msg = await this.usersUseCases.SignUp();
+        return Ok(msg);
     }
 
     [HttpPost("signin")]
-    public ActionResult SignInUser() {
-        return Ok("Sign In User");
+    public async Task<ActionResult<string>> SignInUser() {
+        var msg = await this.usersUseCases.SignIn();
+        return Ok(msg);
     }
 }
