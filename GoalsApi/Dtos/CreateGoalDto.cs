@@ -1,4 +1,4 @@
-namespace GoalsDomain.Dtos
+namespace GoalsApi.Dtos
 {
     public class CreateGoalDto
     {

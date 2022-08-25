@@ -1,6 +1,6 @@
-using GoalsDomain.Dtos;
+using GoalsApi.Dtos;
 
-namespace GoalsDomain.UseCases
+namespace GoalsApi.UseCases
 {
     public class GoalsUseCases
     {

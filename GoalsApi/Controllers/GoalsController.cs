@@ -1,5 +1,5 @@
-using GoalsDomain.Dtos;
-using GoalsDomain.UseCases;
+using GoalsApi.Dtos;
+using GoalsApi.UseCases;
 
 using Microsoft.AspNetCore.Mvc;
 
