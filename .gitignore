@@ -3,10 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# SECRETS
-secrets.json
-**/*secrets.json
-GoalsApi/secrets.json
+# ENV
+.env
 
 # User-specific files
 *.rsuser
