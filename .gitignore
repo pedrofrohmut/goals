@@ -456,3 +456,6 @@ $RECYCLE.BIN/
 # Vim
 *.swp
 *.swo
+
+# SECRETS
+**/secrets.json
