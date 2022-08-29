@@ -2,7 +2,7 @@ using System.Data;
 
 using GoalsApi.DataAccess.Dapper;
 using GoalsApi.Dtos;
-using GoalsApi.UseCases;
+using GoalsApi.Services.Bcrypt;
 using GoalsApi.UseCases.Users;
 using GoalsApi.Utils;
 
@@ -14,12 +14,10 @@ namespace GoalsApi.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly UsersUseCases usersUseCases;
     private readonly IConfiguration configuration;
    
     public UsersController(IConfiguration configuration) {
         this.configuration = configuration;
-        this.usersUseCases = new UsersUseCases();
     }
 
     private IDbConnection GetConnection() {
@@ -36,9 +34,10 @@ public class UsersController : ControllerBase
     public ActionResult<string> SignUp(CreateUserDto newUser) {
         var connection = GetConnection();
         var userDataAccess = new DapperUserDataAccess(connection);
+        var passwordService = new BCryptPasswordService();
         try {
             ConnectiongManager.OpenConnection(connection);
-            var useCase = new SignUpUserUseCase(userDataAccess);
+            var useCase = new SignUpUserUseCase(userDataAccess, passwordService);
             useCase.Execute(newUser);
             return new ObjectResult("Usuario Criado") { StatusCode = StatusCodes.Status201Created };
         } catch (ArgumentException e) {
@@ -57,7 +56,6 @@ public class UsersController : ControllerBase
     // @access public
     [HttpPost("signin")]
     public async Task<ActionResult<string>> SignInUser() {
-        var msg = await this.usersUseCases.SignIn();
-        return Ok(msg);
+        return Ok("Hello, SignIn");
     }
 }
