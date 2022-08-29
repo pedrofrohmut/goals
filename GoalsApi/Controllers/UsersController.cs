@@ -3,6 +3,7 @@ using System.Data;
 using GoalsApi.DataAccess.Dapper;
 using GoalsApi.Dtos;
 using GoalsApi.Services.Bcrypt;
+using GoalsApi.Services.Microsoft;
 using GoalsApi.UseCases.Users;
 using GoalsApi.Utils;
 
@@ -56,6 +57,8 @@ public class UsersController : ControllerBase
     // @access public
     [HttpPost("signin")]
     public async Task<ActionResult<string>> SignInUser() {
-        return Ok("Hello, SignIn");
+        var jwtSecret = this.configuration["jwtSecret"];
+        var token = new MicrosoftJwtService(jwtSecret).GenerateJWT(Guid.NewGuid());
+        return Ok(token);
     }
 }
