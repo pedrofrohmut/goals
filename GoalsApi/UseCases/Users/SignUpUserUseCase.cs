@@ -1,16 +1,18 @@
 using GoalsApi.Dtos;
 using GoalsApi.DataAccess;
+using GoalsApi.Services;
+
 
 namespace GoalsApi.UseCases.Users
 {
-    using BCrypt.Net;
-
     public class SignUpUserUseCase
     {
         private readonly UserDataAccess userDataAccess;
-       
-        public SignUpUserUseCase(UserDataAccess userDataAccess) {
+        private readonly PasswordService passwordService;
+
+        public SignUpUserUseCase(UserDataAccess userDataAccess, PasswordService passwordService) {
             this.userDataAccess = userDataAccess;
+            this.passwordService = passwordService;
         }
 
         public void Execute(CreateUserDto newUser) {
@@ -37,12 +39,8 @@ namespace GoalsApi.UseCases.Users
         }
 
         private string CreatePasswordHash(string password) {
-            try {
-                var hash = BCrypt.HashPassword(password);
-                return hash;
-            } catch (Exception e) {
-                throw new Exception("Error to generate a password hash. " + e.Message);
-            }
+            var passwordHash = this.passwordService.GetPasswordHash(password);
+            return passwordHash;
         }
 
         private void CreateUser(CreateUserDto newUser, string passwordHash) {
