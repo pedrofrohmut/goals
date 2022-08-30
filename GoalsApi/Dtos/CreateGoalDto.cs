@@ -1,7 +1,6 @@
-namespace GoalsApi.Dtos
+namespace GoalsApi.Dtos;
+
+public class CreateGoalDto
 {
-    public class CreateGoalDto
-    {
-        public string Text { get; set; } = "";
-    }
+    public string Text { get; set; } = "";
 }

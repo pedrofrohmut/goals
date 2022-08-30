@@ -1,7 +1,6 @@
-namespace GoalsApi.Services 
+namespace GoalsApi.Services;
+
+public interface JwtService
 {
-    public interface JwtService
-    {
-        string GenerateJWT(Guid id);
-    }
+    string GenerateJWT(Guid id);
 }

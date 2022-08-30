@@ -1,8 +1,7 @@
-namespace GoalsApi.Services
+namespace GoalsApi.Services;
+
+public interface PasswordService
 {
-    public interface PasswordService
-    {
-        string GetPasswordHash(string password);
-        bool ComparePasswordAndHash(string password, string hash);
-    }
+    string GetPasswordHash(string password);
+    bool ComparePasswordAndHash(string password, string hash);
 }

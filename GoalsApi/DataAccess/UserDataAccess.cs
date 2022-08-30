@@ -1,10 +1,9 @@
 using GoalsApi.Dtos;
 
-namespace GoalsApi.DataAccess
+namespace GoalsApi.DataAccess;
+
+public interface UserDataAccess
 {
-    public interface UserDataAccess
-    {
-        UserDbDto? FindUserByEmail(string email);
-        void CreateUser(CreateUserDto newUser, string passwordHash);
-    }
+    UserDbDto? FindUserByEmail(string email);
+    void CreateUser(CreateUserDto newUser, string passwordHash);
 }
