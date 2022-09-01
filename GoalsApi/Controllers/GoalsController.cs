@@ -18,26 +18,26 @@ public class GoalsController : ControllerBase
    
    
     [HttpPost]
-    public async Task<ActionResult> AddGoal() {
-        var msg = await this.goalsUseCases.AddGoal(new CreateGoalDto());
+    public ActionResult AddGoal() {
+        var msg = goalsUseCases.AddGoal(new CreateGoalDto());
         return Ok(msg);
     }
     
     [HttpGet]
-    public async Task<ActionResult> GetGoals() {
-        var msg = await this.goalsUseCases.GetGoals();
+    public ActionResult GetGoals() {
+        var msg = goalsUseCases.GetGoals();
         return Ok(msg);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateGoal(string id) {
-        var msg = await this.goalsUseCases.UpdateGoal(id);
+    public ActionResult UpdateGoal(string id) {
+        var msg = goalsUseCases.UpdateGoal(id);
         return Ok(msg);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteGoal(string id) {
-        var msg = await this.goalsUseCases.DeleteGoal(id);
+    public ActionResult DeleteGoal(string id) {
+        var msg = goalsUseCases.DeleteGoal(id);
         return Ok("Delete Goal " + id);
     }
 }
