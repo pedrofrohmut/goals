@@ -56,7 +56,7 @@ public class SignInUserUseCase
     }
 
     private string GenerateJWT(Guid id) {
-        var token = this.jwtService.GenerateJWT(id);
+        var token = this.jwtService.GenerateToken(id);
         return token;
     }
 }

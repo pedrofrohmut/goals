@@ -17,14 +17,16 @@ public class UsersController : ControllerBase
 {
     private readonly IConfiguration configuration;
    
-    public UsersController(IConfiguration configuration) {
+    public UsersController(IConfiguration configuration) 
+    {
         this.configuration = configuration;
     }
 
-    private IDbConnection GetConnection() {
+    private IDbConnection GetConnection() 
+    {
         string DB_USER = this.configuration["username"];
         string DB_PASS = this.configuration["password"];
-        var connection = ConnectiongManager.GetConnection(DB_USER, DB_PASS);
+        var connection = ConnectionManager.GetConnection(DB_USER, DB_PASS);
         return connection;
     }
      
@@ -33,13 +35,14 @@ public class UsersController : ControllerBase
     // @access public
     [HttpPost]
     [AllowAnonymous]
-    public ActionResult<string> SignUp(CreateUserDto newUser) {
+    public ActionResult<string> SignUp([FromBody] CreateUserDto newUser) 
+    {
         var connection = GetConnection();
         var userDataAccess = new DapperUserDataAccess(connection);
         var passwordService = new BCryptPasswordService();
         var signUpUserUseCase = new SignUpUserUseCase(userDataAccess, passwordService);
         try {
-            ConnectiongManager.OpenConnection(connection);
+            ConnectionManager.OpenConnection(connection);
             signUpUserUseCase.Execute(newUser);
             return new ObjectResult("Usuario Criado") { StatusCode = StatusCodes.Status201Created };
         } catch (ArgumentException e) {
@@ -49,7 +52,7 @@ public class UsersController : ControllerBase
                 StatusCode = StatusCodes.Status500InternalServerError 
             };
         } finally {
-            ConnectiongManager.CloseConnection(connection);
+            ConnectionManager.CloseConnection(connection);
         }
     }
 
@@ -58,7 +61,8 @@ public class UsersController : ControllerBase
     // @access public
     [HttpPost("signin")]
     [AllowAnonymous]
-    public ActionResult<string> SignInUser([FromBody] UserCredentialsDto credentials) {
+    public ActionResult<string> SignInUser([FromBody] UserCredentialsDto credentials) 
+    {
         var connection = GetConnection();
         var userDataAccess = new DapperUserDataAccess(connection);
         var passwordService = new BCryptPasswordService();
@@ -66,7 +70,7 @@ public class UsersController : ControllerBase
         var jwtService = new MicrosoftJwtService(jwtSecret);
         var signInUserUseCase = new SignInUserUseCase(userDataAccess, passwordService, jwtService);
         try {
-            ConnectiongManager.OpenConnection(connection);
+            ConnectionManager.OpenConnection(connection);
             var signedUser = signInUserUseCase.Execute(credentials);
             return Ok(signedUser);
         } catch (ArgumentException e) {
@@ -74,7 +78,36 @@ public class UsersController : ControllerBase
         } catch (Exception e) {
             return BadRequest(e.Message);
         } finally {
-            ConnectiongManager.CloseConnection(connection);
+            ConnectionManager.CloseConnection(connection);
+        }
+    }
+
+
+    // @desc Verify if token is valid
+    // @route POST api/users/verify
+    // @access public
+    [HttpPost("verify")]
+    [AllowAnonymous]
+    public ActionResult<bool> VerifyToken([FromBody] VerifyTokenDto body) 
+    {
+        var connection = GetConnection();
+        var userDataAccess = new DapperUserDataAccess(connection);
+        var jwtSecret = this.configuration["jwtSecret"];
+        var jwtService = new MicrosoftJwtService(jwtSecret);
+        var verifyTokenUseCase = new VerifyTokenUseCase(userDataAccess, jwtService);
+        try {
+            ConnectionManager.OpenConnection(connection);
+            verifyTokenUseCase.Execute(body.Token);
+            return Ok(true);
+        } catch (ArgumentException e) {
+            System.Console.WriteLine("CONTROLLER = " + e.Message);
+            return Ok(false);
+        } catch (Exception e) {
+            return new ObjectResult("Server error: " + e.Message) {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+        } finally {
+            ConnectionManager.CloseConnection(connection);
         }
     }
 }

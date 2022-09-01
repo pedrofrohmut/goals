@@ -9,5 +9,6 @@ public class UserDbDto
     public string Phone { get; set; } = "";
 
     public override string ToString() => 
-        $"{Name}, {Email}, {Phone}, {PasswordHash}, {Phone}";
+        $"Id: {Id.ToString()}, Name: {Name}, Email: {Email}, Phone: {Phone}, " +
+        $"PasswordHash: {PasswordHash}, Phone: {Phone}";
 }

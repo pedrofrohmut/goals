@@ -1,6 +1,9 @@
+using GoalsApi.Dtos;
+
 namespace GoalsApi.Services;
 
 public interface JwtService
 {
-    string GenerateJWT(Guid id);
+    string GenerateToken(Guid id);
+    DecodedTokenDto? GetValidatedAndDecodedToken(string token);
 }

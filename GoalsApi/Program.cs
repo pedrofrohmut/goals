@@ -1,17 +1,10 @@
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using GoalsApi.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var jwtSecret = builder.Configuration["jwtSecret"];
-var key = Encoding.UTF8.GetBytes(jwtSecret);
-var tokenValidationParameters = new TokenValidationParameters() {
-    ValidateIssuerSigningKey = true,
-    IssuerSigningKey         = new SymmetricSecurityKey(key),
-    ValidateIssuer           = false,
-    ValidateAudience         = false,
-};
+var tokenValidationParameters = Token.GetTokenValidationParameters(jwtSecret);
 
 builder.Services.AddCors();
 builder.Services.AddControllers();
