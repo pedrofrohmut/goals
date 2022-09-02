@@ -1,5 +1,3 @@
-using System.Data;
-
 using GoalsApi.DataAccess.Dapper;
 using GoalsApi.Dtos;
 using GoalsApi.Services.Bcrypt;
@@ -22,15 +20,6 @@ public class UsersController : ControllerBase
         this.configuration = configuration;
     }
 
-    // TODO: Replace private method calls for the util call
-    private IDbConnection GetConnection() 
-    {
-        string DB_USER = this.configuration["username"];
-        string DB_PASS = this.configuration["password"];
-        var connection = ConnectionManager.GetConnection(DB_USER, DB_PASS);
-        return connection;
-    }
-     
     // @desc Creates a new user
     // @route POST api/users
     // @access public
@@ -38,7 +27,7 @@ public class UsersController : ControllerBase
     [AllowAnonymous]
     public ActionResult<string> SignUp([FromBody] CreateUserDto newUser) 
     {
-        var connection = GetConnection();
+        var connection = ConnectionManager.GetConnectionFromConfig(configuration);
         var userDataAccess = new DapperUserDataAccess(connection);
         var passwordService = new BCryptPasswordService();
         var signUpUserUseCase = new SignUpUserUseCase(userDataAccess, passwordService);
@@ -64,7 +53,7 @@ public class UsersController : ControllerBase
     [AllowAnonymous]
     public ActionResult<string> SignInUser([FromBody] UserCredentialsDto credentials) 
     {
-        var connection = GetConnection();
+        var connection = ConnectionManager.GetConnectionFromConfig(configuration);
         var userDataAccess = new DapperUserDataAccess(connection);
         var passwordService = new BCryptPasswordService();
         var jwtSecret = this.configuration["jwtSecret"];
@@ -91,7 +80,7 @@ public class UsersController : ControllerBase
     [AllowAnonymous]
     public ActionResult<bool> VerifyToken([FromBody] VerifyTokenDto body) 
     {
-        var connection = GetConnection();
+        var connection = ConnectionManager.GetConnectionFromConfig(configuration);
         var userDataAccess = new DapperUserDataAccess(connection);
         var jwtSecret = this.configuration["jwtSecret"];
         var jwtService = new MicrosoftJwtService(jwtSecret);

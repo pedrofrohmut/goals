@@ -1,3 +1,7 @@
+using GoalsApi.DataAccess.Dapper;
+using GoalsApi.Dtos;
+using GoalsApi.UseCases.Goals;
+using GoalsApi.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoalsApi.Controllers;
@@ -6,13 +10,37 @@ namespace GoalsApi.Controllers;
 [Route("api/[controller]")]
 public class GoalsController : ControllerBase
 {
+    private readonly IConfiguration configuration;
+
+    public GoalsController(IConfiguration configuration)
+    {
+        this.configuration = configuration;
+    }
+
     // @Desc Add a Goal
     // @Route POST api/goals
     // @Access private
     [HttpPost]
-    public ActionResult AddGoal()
+    public ActionResult AddGoal([FromHeader] string authorization, [FromBody] CreateGoalDto newGoal)
     {
-        return Ok();
+        var userId = TokenManager.GetUserIdFromToken(configuration, authorization);
+        var connection = ConnectionManager.GetConnectionFromConfig(configuration);
+        var userDataAccess = new DapperUserDataAccess(connection);
+        var goalDataAccess = new DapperGoalDataAccess(connection);
+        var addGoalUseCase = new AddGoalUseCase(userDataAccess, goalDataAccess);
+        try {
+            ConnectionManager.OpenConnection(connection);
+            addGoalUseCase.Execute(newGoal, userId);
+            return new ObjectResult("Goal Criado") { StatusCode = StatusCodes.Status201Created };
+        } catch (ArgumentException e) {
+            return BadRequest(e.Message);
+        } catch (Exception e) {
+            return new ObjectResult("Some other error, " + e.Message) { 
+                StatusCode = StatusCodes.Status500InternalServerError 
+            };
+        } finally {
+            ConnectionManager.CloseConnection(connection);
+        }
     }
 
     // @Desc Get all goals from user
