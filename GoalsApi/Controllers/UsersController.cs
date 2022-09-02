@@ -22,6 +22,7 @@ public class UsersController : ControllerBase
         this.configuration = configuration;
     }
 
+    // TODO: Replace private method calls for the util call
     private IDbConnection GetConnection() 
     {
         string DB_USER = this.configuration["username"];

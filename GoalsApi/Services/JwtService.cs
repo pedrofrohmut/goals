@@ -4,6 +4,6 @@ namespace GoalsApi.Services;
 
 public interface JwtService
 {
-    string GenerateToken(Guid id);
+    string? GenerateToken(Guid id);
     DecodedTokenDto? GetValidatedAndDecodedToken(string token);
 }

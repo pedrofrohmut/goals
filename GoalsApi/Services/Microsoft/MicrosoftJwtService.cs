@@ -16,15 +16,14 @@ public class MicrosoftJwtService : JwtService
     }
 
 
-    public string GenerateToken(Guid userId)
+    public string? GenerateToken(Guid userId)
     {
         try {
             var subject = new ClaimsIdentity(new Claim[] {
                 new Claim("userId", userId.ToString())
             });
             // Must be Utc time
-            // var expirationDate = DateTime.UtcNow.AddDays(30);
-            var expirationDate = DateTime.UtcNow.AddSeconds(10);
+            var expirationDate = DateTime.UtcNow.AddDays(30);
             var key = Encoding.ASCII.GetBytes(jwtSecret);
             var securityKey = new SymmetricSecurityKey(key);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -40,7 +39,7 @@ public class MicrosoftJwtService : JwtService
         } catch (Exception e) {
             System.Console.WriteLine("Error to generate token. " + e.Message);
             System.Console.WriteLine(e.StackTrace);
-            throw e;
+            return null;
         }
     }
 

@@ -1,6 +1,3 @@
-using GoalsApi.Dtos;
-using GoalsApi.UseCases;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoalsApi.Controllers;
@@ -9,35 +6,39 @@ namespace GoalsApi.Controllers;
 [Route("api/[controller]")]
 public class GoalsController : ControllerBase
 {
-    private readonly GoalsUseCases goalsUseCases;
-   
-    public GoalsController()
-    {
-        this.goalsUseCases = new GoalsUseCases();
-    }
-   
-   
+    // @Desc Add a Goal
+    // @Route POST api/goals
+    // @Access private
     [HttpPost]
-    public ActionResult AddGoal() {
-        var msg = goalsUseCases.AddGoal(new CreateGoalDto());
-        return Ok(msg);
-    }
-    
-    [HttpGet]
-    public ActionResult GetGoals() {
-        var msg = goalsUseCases.GetGoals();
-        return Ok(msg);
+    public ActionResult AddGoal()
+    {
+        return Ok();
     }
 
+    // @Desc Get all goals from user
+    // @Route GET api/goals/user/123
+    // @Access private
+    [HttpGet("user/{userId}")]
+    public ActionResult GetGoals(Guid userId)
+    {
+        return Ok();
+    }
+
+    // @Desc Get all goals
+    // @Route POST api/goals
+    // @Access private
     [HttpPut("{id}")]
-    public ActionResult UpdateGoal(string id) {
-        var msg = goalsUseCases.UpdateGoal(id);
-        return Ok(msg);
+    public ActionResult UpdateGoal(Guid id)
+    {
+        return Ok();
     }
 
+    // @Desc Get all goals
+    // @Route POST api/goals
+    // @Access private
     [HttpDelete("{id}")]
-    public ActionResult DeleteGoal(string id) {
-        var msg = goalsUseCases.DeleteGoal(id);
-        return Ok("Delete Goal " + id);
+    public ActionResult DeleteGoal(Guid id)
+    {
+        return Ok();
     }
 }

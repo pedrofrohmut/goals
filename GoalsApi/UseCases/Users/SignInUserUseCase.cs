@@ -11,16 +11,17 @@ public class SignInUserUseCase
     private readonly JwtService jwtService;
 
     public SignInUserUseCase(
-            UserDataAccess userDataAccess, 
-            PasswordService passwordService, 
-            JwtService jwtService) 
+            UserDataAccess userDataAccess,
+            PasswordService passwordService,
+            JwtService jwtService)
     {
         this.userDataAccess = userDataAccess;
         this.passwordService = passwordService;
         this.jwtService = jwtService;
     }
 
-    public SignedUserDto  Execute(UserCredentialsDto credentials) {
+    public SignedUserDto  Execute(UserCredentialsDto credentials)
+    {
         ValidateCredentials(credentials);
         var foundUser = FindUserByEmail(credentials.Email);
         VerifyPassword(credentials.Password, foundUser.PasswordHash);
@@ -33,14 +34,16 @@ public class SignInUserUseCase
         };
     }
 
-    private void ValidateCredentials(UserCredentialsDto credentials) {
-        if (String.IsNullOrWhiteSpace(credentials.Email) || 
+    private void ValidateCredentials(UserCredentialsDto credentials)
+    {
+        if (String.IsNullOrWhiteSpace(credentials.Email) ||
             String.IsNullOrWhiteSpace(credentials.Password)) {
             throw new ArgumentException("Please add all required fields for sign in");
         }
     }
 
-    private UserDbDto FindUserByEmail(String email) {
+    private UserDbDto FindUserByEmail(String email)
+    {
         var user = this.userDataAccess.FindUserByEmail(email);
         if (user == null) {
             throw new Exception("User not found by e-mail");
@@ -48,15 +51,20 @@ public class SignInUserUseCase
         return user;
     }
 
-    private void VerifyPassword(string password, string hash) {
+    private void VerifyPassword(string password, string hash)
+    {
         bool isMatch = this.passwordService.ComparePasswordAndHash(password, hash);
         if (!isMatch) {
-            throw new Exception("Credentials password and database password hash do not match");
+            throw new Exception("Password and hash do not match");
         }
     }
 
-    private string GenerateJWT(Guid id) {
+    private string GenerateJWT(Guid id)
+    {
         var token = this.jwtService.GenerateToken(id);
+        if (token == null) {
+            throw new Exception("Error to generate token");
+        }
         return token;
     }
 }

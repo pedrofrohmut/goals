@@ -8,15 +8,15 @@ public class GoalsUseCases
         return "Hello, Add Goal";
     }
 
-    public string GetGoals() {
+    public string GetGoals(Guid id) {
         return "Hello, Get Goals";
     }
 
-    public string UpdateGoal(string id) {
+    public string UpdateGoal(Guid id) {
         return "Hello, Update Goal";
     }
 
-    public string DeleteGoal(string id) {
+    public string DeleteGoal(Guid id) {
         return "Hello, Delete Goal";
     }
 }
