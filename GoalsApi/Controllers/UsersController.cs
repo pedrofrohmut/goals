@@ -76,10 +76,11 @@ public class UsersController : ControllerBase
     // @desc Verify if token is valid
     // @route POST api/users/verify
     // @access public
-    [HttpPost("verify")]
+    [HttpGet("verify")]
     [AllowAnonymous]
-    public ActionResult<bool> VerifyToken([FromBody] VerifyTokenDto body) 
+    public ActionResult<bool> VerifyToken([FromHeader] string authorization) 
     {
+        var token = authorization.Split(" ")[1];
         var connection = ConnectionManager.GetConnectionFromConfig(configuration);
         var userDataAccess = new DapperUserDataAccess(connection);
         var jwtSecret = this.configuration["jwtSecret"];
@@ -87,10 +88,9 @@ public class UsersController : ControllerBase
         var verifyTokenUseCase = new VerifyTokenUseCase(userDataAccess, jwtService);
         try {
             ConnectionManager.OpenConnection(connection);
-            verifyTokenUseCase.Execute(body.Token);
+            verifyTokenUseCase.Execute(token);
             return Ok(true);
         } catch (ArgumentException e) {
-            System.Console.WriteLine("CONTROLLER = " + e.Message);
             return Ok(false);
         } catch (Exception e) {
             return new ObjectResult("Server error: " + e.Message) {

@@ -833,9 +833,12 @@ $schema	Properties/launchSettings.json	/^  "$schema": "https:\/\/json.schemastor
 9	obj/project.assets.json	/^        "version.txt"$/;"	s	array:libraries.Microsoft.NETCore.Platforms/2.0.0.files
 ASPNETCORE_ENVIRONMENT	Properties/launchSettings.json	/^        "ASPNETCORE_ENVIRONMENT": "Development"$/;"	s	object:profiles.GoalsApi.environmentVariables
 ASPNETCORE_ENVIRONMENT	Properties/launchSettings.json	/^        "ASPNETCORE_ENVIRONMENT": "Development"$/;"	s	object:profiles.IIS Express.environmentVariables
-AddGoal	Controllers/GoalsController.cs	/^    public async Task<ActionResult> AddGoal() {$/;"	m	class:GoalsController
-AddGoal	UseCases/GoalsUseCases.cs	/^    public async Task<string> AddGoal(CreateGoalDto newGoal) {$/;"	m	class:GoalsUseCases
-AddJwtBearer	Program.cs	/^    .AddJwtBearer(opts => {$/;"	m
+AddGoal	Controllers/GoalsController.cs	/^    public ActionResult AddGoal([FromHeader] string authorization, [FromBody] CreateGoalDto newG/;"	m	class:GoalsController
+AddGoal	DataAccess/Dapper/DapperGoalDataAccess.cs	/^    public void AddGoal(CreateGoalDto newGoal, Guid userId) $/;"	m	class:DapperGoalDataAccess
+AddGoal	DataAccess/GoalDataAccess.cs	/^    void AddGoal(CreateGoalDto newGoal, Guid userId);$/;"	m	interface:GoalDataAccess
+AddGoal	UseCases/GoalsUseCases.cs	/^    public string AddGoal(CreateGoalDto newGoal) {$/;"	m	class:GoalsUseCases
+AddGoalUseCase	UseCases/Goals/AddGoalUseCase.cs	/^    public AddGoalUseCase(UserDataAccess userDataAccess, GoalDataAccess goalDataAccess) $/;"	m	class:AddGoalUseCase
+AddGoalUseCase	UseCases/Goals/AddGoalUseCase.cs	/^public class AddGoalUseCase$/;"	c
 AllowedHosts	appsettings.json	/^  "AllowedHosts": "*"$/;"	s
 AllowedHosts	bin/Debug/net6.0/appsettings.json	/^  "AllowedHosts": "*"$/;"	s
 Assets	obj/Debug/net6.0/staticwebassets.build.json	/^  "Assets": []$/;"	a
@@ -849,10 +852,13 @@ BCrypt.Net-Next/4.0.3	obj/project.assets.json	/^    "BCrypt.Net-Next\/4.0.3": {$
 BCryptPasswordService	Services/BCrypt/BCryptPasswordService.cs	/^public class BCryptPasswordService : PasswordService$/;"	c
 BasePath	obj/Debug/net6.0/staticwebassets.build.json	/^  "BasePath": "_content\/GoalsApi",$/;"	s
 CheckEmailAlreadyTaken	UseCases/Users/SignUpUserUseCase.cs	/^    private void CheckEmailAlreadyTaken(string email) {$/;"	m	class:SignUpUserUseCase	file:
-CloseConnection	Utils/ConnectionManager.cs	/^    public static void CloseConnection(IDbConnection connection) {$/;"	m	class:ConnectionManager
+CheckUserExists	UseCases/Goals/AddGoalUseCase.cs	/^    private void CheckUserExists(Guid userId) $/;"	m	class:AddGoalUseCase	file:
+CloseConnection	Utils/ConnectionManager.cs	/^    public static void CloseConnection(IDbConnection connection) $/;"	m	class:ConnectionManager
 ComparePasswordAndHash	Services/BCrypt/BCryptPasswordService.cs	/^    public bool ComparePasswordAndHash(string password, string hash) {$/;"	m	class:BCryptPasswordService
 ComparePasswordAndHash	Services/PasswordService.cs	/^    bool ComparePasswordAndHash(string password, string hash);$/;"	m	interface:PasswordService
 ConnectionManager	Utils/ConnectionManager.cs	/^public class ConnectionManager$/;"	c
+Console.Clear	Program.cs	/^if (app.Environment.IsDevelopment()) Console.Clear();$/;"	m
+CreateGoal	UseCases/Goals/AddGoalUseCase.cs	/^    private void CreateGoal(CreateGoalDto newGoal, Guid userId) $/;"	m	class:AddGoalUseCase	file:
 CreateGoalDto	Dtos/CreateGoalDto.cs	/^public class CreateGoalDto$/;"	c
 CreatePasswordHash	UseCases/Users/SignUpUserUseCase.cs	/^    private string CreatePasswordHash(string password) {$/;"	m	class:SignUpUserUseCase	file:
 CreateUser	DataAccess/Dapper/DapperUserDataAccess.cs	/^    public void CreateUser(CreateUserDto newUser, string passwordHash) $/;"	m	class:DapperUserDataAccess
@@ -866,6 +872,8 @@ Dapper/2.0.123	bin/Debug/net6.0/GoalsApi.deps.json	/^      "Dapper\/2.0.123": {$
 Dapper/2.0.123	bin/Debug/net6.0/GoalsApi.deps.json	/^    "Dapper\/2.0.123": {$/;"	o	object:libraries
 Dapper/2.0.123	obj/project.assets.json	/^      "Dapper\/2.0.123": {$/;"	o	object:targets.net6.0
 Dapper/2.0.123	obj/project.assets.json	/^    "Dapper\/2.0.123": {$/;"	o	object:libraries
+DapperGoalDataAccess	DataAccess/Dapper/DapperGoalDataAccess.cs	/^    public DapperGoalDataAccess(IDbConnection connection)$/;"	m	class:DapperGoalDataAccess
+DapperGoalDataAccess	DataAccess/Dapper/DapperGoalDataAccess.cs	/^public class DapperGoalDataAccess : GoalDataAccess $/;"	c
 DapperUserDataAccess	DataAccess/Dapper/DapperUserDataAccess.cs	/^    public DapperUserDataAccess(IDbConnection connection) $/;"	m	class:DapperUserDataAccess
 DapperUserDataAccess	DataAccess/Dapper/DapperUserDataAccess.cs	/^public class DapperUserDataAccess : UserDataAccess $/;"	c
 DecodedTokenDto	Dtos/DecodedTokenDto.cs	/^public class DecodedTokenDto$/;"	c
@@ -873,40 +881,42 @@ Default	appsettings.Development.json	/^      "Default": "Information",$/;"	s	obj
 Default	appsettings.json	/^      "Default": "Information",$/;"	s	object:Logging.LogLevel
 Default	bin/Debug/net6.0/appsettings.Development.json	/^      "Default": "Information",$/;"	s	object:Logging.LogLevel
 Default	bin/Debug/net6.0/appsettings.json	/^      "Default": "Information",$/;"	s	object:Logging.LogLevel
-DeleteGoal	Controllers/GoalsController.cs	/^    public async Task<ActionResult> DeleteGoal(string id) {$/;"	m	class:GoalsController
-DeleteGoal	UseCases/GoalsUseCases.cs	/^    public async Task<string> DeleteGoal(string id) {$/;"	m	class:GoalsUseCases
+DeleteGoal	Controllers/GoalsController.cs	/^    public ActionResult DeleteGoal(Guid id)$/;"	m	class:GoalsController
+DeleteGoal	UseCases/GoalsUseCases.cs	/^    public string DeleteGoal(Guid id) {$/;"	m	class:GoalsUseCases
 DiscoveryPatterns	obj/Debug/net6.0/staticwebassets.build.json	/^  "DiscoveryPatterns": [],$/;"	a
 Email	Dtos/CreateUserDto.cs	/^    public string Email { get; set; } = "";$/;"	p	class:CreateUserDto
 Email	Dtos/SignedUserDto.cs	/^    public string Email { get; set; } = "";$/;"	p	class:SignedUserDto
 Email	Dtos/UserCredentialsDto.cs	/^    public string Email { get; set; } = "";$/;"	p	class:UserCredentialsDto
 Email	Dtos/UserDbDto.cs	/^    public string Email { get; set; } = "";$/;"	p	class:UserDbDto
-Execute	UseCases/Users/SignInUserUseCase.cs	/^    public SignedUserDto  Execute(UserCredentialsDto credentials) {$/;"	m	class:SignInUserUseCase
+Execute	UseCases/Goals/AddGoalUseCase.cs	/^    public void Execute(CreateGoalDto newGoal, Guid authUserId) $/;"	m	class:AddGoalUseCase
+Execute	UseCases/Users/SignInUserUseCase.cs	/^    public SignedUserDto  Execute(UserCredentialsDto credentials)$/;"	m	class:SignInUserUseCase
 Execute	UseCases/Users/SignUpUserUseCase.cs	/^    public void Execute(CreateUserDto newUser) {$/;"	m	class:SignUpUserUseCase
 Execute	UseCases/Users/VerifyTokenUseCase.cs	/^    public void Execute(string token) $/;"	m	class:VerifyTokenUseCase
 FindUserByEmail	DataAccess/Dapper/DapperUserDataAccess.cs	/^    public UserDbDto? FindUserByEmail(string email) $/;"	m	class:DapperUserDataAccess
 FindUserByEmail	DataAccess/UserDataAccess.cs	/^    UserDbDto? FindUserByEmail(string email);$/;"	m	interface:UserDataAccess
-FindUserByEmail	UseCases/Users/SignInUserUseCase.cs	/^    private UserDbDto FindUserByEmail(String email) {$/;"	m	class:SignInUserUseCase	file:
+FindUserByEmail	UseCases/Users/SignInUserUseCase.cs	/^    private UserDbDto FindUserByEmail(String email)$/;"	m	class:SignInUserUseCase	file:
 FindUserById	DataAccess/Dapper/DapperUserDataAccess.cs	/^    public UserDbDto? FindUserById(Guid userId) $/;"	m	class:DapperUserDataAccess
 FindUserById	DataAccess/UserDataAccess.cs	/^    UserDbDto? FindUserById(Guid userId);$/;"	m	interface:UserDataAccess
 FindUserByTokenUserId	UseCases/Users/VerifyTokenUseCase.cs	/^    private void FindUserByTokenUserId(Guid userId) $/;"	m	class:VerifyTokenUseCase	file:
-GenerateJWT	Services/JwtService.cs	/^    string GenerateJWT(Guid id);$/;"	m	interface:JwtService
-GenerateJWT	Services/Microsoft/MicrosoftJwtService.cs	/^    public string GenerateJWT(Guid userId) $/;"	m	class:MicrosoftJwtService
-GenerateJWT	UseCases/Users/SignInUserUseCase.cs	/^    private string GenerateJWT(Guid id) {$/;"	m	class:SignInUserUseCase	file:
-GetConnection	Controllers/UsersController.cs	/^    private IDbConnection GetConnection() $/;"	m	class:UsersController	file:
+GenerateJWT	UseCases/Users/SignInUserUseCase.cs	/^    private string GenerateJWT(Guid id)$/;"	m	class:SignInUserUseCase	file:
+GenerateToken	Services/JwtService.cs	/^    string? GenerateToken(Guid id);$/;"	m	interface:JwtService
+GenerateToken	Services/Microsoft/MicrosoftJwtService.cs	/^    public string? GenerateToken(Guid userId)$/;"	m	class:MicrosoftJwtService
 GetConnection	Utils/ConnectionManager.cs	/^    public static NpgsqlConnection GetConnection(string username, string password) =>$/;"	m	class:ConnectionManager
-GetDecodedToken	Services/JwtService.cs	/^    DecodedTokenDto? GetDecodedToken(string token);$/;"	m	interface:JwtService
-GetDecodedToken	Services/Microsoft/MicrosoftJwtService.cs	/^    public DecodedTokenDto? GetDecodedToken(string token) $/;"	m	class:MicrosoftJwtService
-GetDecodedToken	UseCases/Users/VerifyTokenUseCase.cs	/^    private DecodedTokenDto GetDecodedToken(string token) $/;"	m	class:VerifyTokenUseCase	file:
-GetGoals	Controllers/GoalsController.cs	/^    public async Task<ActionResult> GetGoals() {$/;"	m	class:GoalsController
-GetGoals	UseCases/GoalsUseCases.cs	/^    public async Task<string> GetGoals() {$/;"	m	class:GoalsUseCases
+GetGoals	Controllers/GoalsController.cs	/^    public ActionResult GetGoals(Guid userId)$/;"	m	class:GoalsController
+GetGoals	UseCases/GoalsUseCases.cs	/^    public string GetGoals(Guid id) {$/;"	m	class:GoalsUseCases
 GetPasswordHash	Services/BCrypt/BCryptPasswordService.cs	/^    public string GetPasswordHash(string password) {$/;"	m	class:BCryptPasswordService
 GetPasswordHash	Services/PasswordService.cs	/^    string GetPasswordHash(string password);$/;"	m	interface:PasswordService
 GetTokenValidationParameters	Entities/Token.cs	/^    public static TokenValidationParameters GetTokenValidationParameters(string jwtSecret)$/;"	m	class:Token
+GetUserIdFromToken	Utils/TokenManager.cs	/^    public static Guid GetUserIdFromToken(IConfiguration configuration, string authorizationHead/;"	m	class:TokenManager
+GetValidatedAndDecodedToken	Services/JwtService.cs	/^    DecodedTokenDto? GetValidatedAndDecodedToken(string token);$/;"	m	interface:JwtService
+GetValidatedAndDecodedToken	Services/Microsoft/MicrosoftJwtService.cs	/^    public DecodedTokenDto? GetValidatedAndDecodedToken(string token)$/;"	m	class:MicrosoftJwtService
+GetValidatedAndDecodedToken	UseCases/Users/VerifyTokenUseCase.cs	/^    private DecodedTokenDto GetValidatedAndDecodedToken(string token)$/;"	m	class:VerifyTokenUseCase	file:
+GoalDataAccess	DataAccess/GoalDataAccess.cs	/^public interface GoalDataAccess$/;"	i
 GoalsApi	Properties/launchSettings.json	/^    "GoalsApi": {$/;"	o	object:profiles
 GoalsApi.dll	bin/Debug/net6.0/GoalsApi.deps.json	/^          "GoalsApi.dll": {}$/;"	o	object:targets..NETCoreApp,Version=v6.0.GoalsApi/1.0.0.runtime
 GoalsApi/1.0.0	bin/Debug/net6.0/GoalsApi.deps.json	/^      "GoalsApi\/1.0.0": {$/;"	o	object:targets..NETCoreApp,Version=v6.0
 GoalsApi/1.0.0	bin/Debug/net6.0/GoalsApi.deps.json	/^    "GoalsApi\/1.0.0": {$/;"	o	object:libraries
-GoalsController	Controllers/GoalsController.cs	/^    public GoalsController()$/;"	m	class:GoalsController
+GoalsController	Controllers/GoalsController.cs	/^    public GoalsController(IConfiguration configuration)$/;"	m	class:GoalsController
 GoalsController	Controllers/GoalsController.cs	/^public class GoalsController : ControllerBase$/;"	c
 GoalsUseCases	UseCases/GoalsUseCases.cs	/^public class GoalsUseCases$/;"	c
 Hash	obj/Debug/net6.0/staticwebassets.build.json	/^  "Hash": "k2y+otHppDJ5DZqywr9MQ5eTBhskuAGeaJKtnLI\/6Cc=",$/;"	s
@@ -1194,8 +1204,8 @@ Microsoft.Win32.Registry/4.5.0	bin/Debug/net6.0/GoalsApi.deps.json	/^      "Micr
 Microsoft.Win32.Registry/4.5.0	bin/Debug/net6.0/GoalsApi.deps.json	/^    "Microsoft.Win32.Registry\/4.5.0": {$/;"	o	object:libraries
 Microsoft.Win32.Registry/4.5.0	obj/project.assets.json	/^      "Microsoft.Win32.Registry\/4.5.0": {$/;"	o	object:targets.net6.0
 Microsoft.Win32.Registry/4.5.0	obj/project.assets.json	/^    "Microsoft.Win32.Registry\/4.5.0": {$/;"	o	object:libraries
-MicrosoftJwtService	Services/Microsoft/MicrosoftJwtService.cs	/^    public MicrosoftJwtService(string jwtSecret) $/;"	m	class:MicrosoftJwtService
-MicrosoftJwtService	Services/Microsoft/MicrosoftJwtService.cs	/^public class MicrosoftJwtService : JwtService $/;"	c
+MicrosoftJwtService	Services/Microsoft/MicrosoftJwtService.cs	/^    public MicrosoftJwtService(string jwtSecret)$/;"	m	class:MicrosoftJwtService
+MicrosoftJwtService	Services/Microsoft/MicrosoftJwtService.cs	/^public class MicrosoftJwtService : JwtService$/;"	c
 Mode	obj/Debug/net6.0/staticwebassets.build.json	/^  "Mode": "Default",$/;"	s
 Name	Dtos/CreateUserDto.cs	/^    public string Name { get; set; } = "";$/;"	p	class:CreateUserDto
 Name	Dtos/SignedUserDto.cs	/^    public string Name { get; set; } = "";$/;"	p	class:SignedUserDto
@@ -1207,7 +1217,7 @@ Npgsql/6.0.6	bin/Debug/net6.0/GoalsApi.deps.json	/^      "Npgsql\/6.0.6": {$/;"	
 Npgsql/6.0.6	bin/Debug/net6.0/GoalsApi.deps.json	/^    "Npgsql\/6.0.6": {$/;"	o	object:libraries
 Npgsql/6.0.6	obj/project.assets.json	/^      "Npgsql\/6.0.6": {$/;"	o	object:targets.net6.0
 Npgsql/6.0.6	obj/project.assets.json	/^    "Npgsql\/6.0.6": {$/;"	o	object:libraries
-OpenConnection	Utils/ConnectionManager.cs	/^    public static void OpenConnection(IDbConnection connection) {$/;"	m	class:ConnectionManager
+OpenConnection	Utils/ConnectionManager.cs	/^    public static void OpenConnection(IDbConnection connection) $/;"	m	class:ConnectionManager
 Password	Dtos/CreateUserDto.cs	/^    public string Password { get; set; } = "";$/;"	p	class:CreateUserDto
 Password	Dtos/UserCredentialsDto.cs	/^    public string Password { get; set; } = "";$/;"	p	class:UserCredentialsDto
 PasswordHash	Dtos/UserDbDto.cs	/^    public string PasswordHash { get; set; } = "";$/;"	p	class:UserDbDto
@@ -1341,22 +1351,25 @@ System.Text.Encodings.Web/4.5.0	bin/Debug/net6.0/GoalsApi.deps.json	/^    "Syste
 System.Text.Encodings.Web/4.5.0	obj/project.assets.json	/^      "System.Text.Encodings.Web\/4.5.0": {$/;"	o	object:targets.net6.0
 System.Text.Encodings.Web/4.5.0	obj/project.assets.json	/^    "System.Text.Encodings.Web\/4.5.0": {$/;"	o	object:libraries
 Text	Dtos/CreateGoalDto.cs	/^    public string Text { get; set; } = "";$/;"	p	class:CreateGoalDto
+ToString	Dtos/CreateGoalDto.cs	/^    public override string ToString() => $"Text: {Text}";$/;"	m	class:CreateGoalDto
 ToString	Dtos/DecodedTokenDto.cs	/^    public override string ToString() => $"UserId: {UserId}";$/;"	m	class:DecodedTokenDto
 ToString	Dtos/UserDbDto.cs	/^    public override string ToString() => $/;"	m	class:UserDbDto
 Token	Dtos/SignedUserDto.cs	/^    public string Token { get; set; } = "";$/;"	p	class:SignedUserDto
 Token	Dtos/VerifyTokenDto.cs	/^    public string Token { get; set; } = "";$/;"	p	class:VerifyTokenDto
 Token	Entities/Token.cs	/^public class Token$/;"	c
-UpdateGoal	Controllers/GoalsController.cs	/^    public async Task<ActionResult> UpdateGoal(string id) {$/;"	m	class:GoalsController
-UpdateGoal	UseCases/GoalsUseCases.cs	/^    public async Task<string> UpdateGoal(string id) {$/;"	m	class:GoalsUseCases
+TokenManager	Utils/TokenManager.cs	/^public class TokenManager$/;"	c
+UpdateGoal	Controllers/GoalsController.cs	/^    public ActionResult UpdateGoal(Guid id)$/;"	m	class:GoalsController
+UpdateGoal	UseCases/GoalsUseCases.cs	/^    public string UpdateGoal(Guid id) {$/;"	m	class:GoalsUseCases
 UserCredentialsDto	Dtos/UserCredentialsDto.cs	/^public class UserCredentialsDto$/;"	c
 UserDataAccess	DataAccess/UserDataAccess.cs	/^public interface UserDataAccess$/;"	i
 UserDbDto	Dtos/UserDbDto.cs	/^public class UserDbDto$/;"	c
 UserId	Dtos/DecodedTokenDto.cs	/^    public Guid UserId { get; set; }$/;"	p	class:DecodedTokenDto
 UsersController	Controllers/UsersController.cs	/^    public UsersController(IConfiguration configuration) $/;"	m	class:UsersController
 UsersController	Controllers/UsersController.cs	/^public class UsersController : ControllerBase$/;"	c
-ValidateCredentials	UseCases/Users/SignInUserUseCase.cs	/^    private void ValidateCredentials(UserCredentialsDto credentials) {$/;"	m	class:SignInUserUseCase	file:
+ValidateCredentials	UseCases/Users/SignInUserUseCase.cs	/^    private void ValidateCredentials(UserCredentialsDto credentials)$/;"	m	class:SignInUserUseCase	file:
+ValidateNewGoal	UseCases/Goals/AddGoalUseCase.cs	/^    private void ValidateNewGoal(CreateGoalDto newGoal) $/;"	m	class:AddGoalUseCase	file:
 ValidateNewUser	UseCases/Users/SignUpUserUseCase.cs	/^    private void ValidateNewUser(CreateUserDto newUser) {$/;"	m	class:SignUpUserUseCase	file:
-VerifyPassword	UseCases/Users/SignInUserUseCase.cs	/^    private void VerifyPassword(string password, string hash) {$/;"	m	class:SignInUserUseCase	file:
+VerifyPassword	UseCases/Users/SignInUserUseCase.cs	/^    private void VerifyPassword(string password, string hash)$/;"	m	class:SignInUserUseCase	file:
 VerifyToken	Controllers/UsersController.cs	/^    public ActionResult<bool> VerifyToken([FromBody] VerifyTokenDto body) $/;"	m	class:UsersController
 VerifyTokenDto	Dtos/VerifyTokenDto.cs	/^public class VerifyTokenDto$/;"	c
 VerifyTokenUseCase	UseCases/Users/VerifyTokenUseCase.cs	/^    public VerifyTokenUseCase(UserDataAccess userDataAccess, JwtService jwtService)$/;"	m	class:VerifyTokenUseCase
@@ -1365,9 +1378,7 @@ Version	obj/Debug/net6.0/staticwebassets.build.json	/^  "Version": 1,$/;"	n
 anonymousAuthentication	Properties/launchSettings.json	/^    "anonymousAuthentication": true,$/;"	b	object:iisSettings
 app.MapControllers	Program.cs	/^app.MapControllers();$/;"	m
 app.Run	Program.cs	/^app.Run();$/;"	m
-app.UseAuthentication	Program.cs	/^app.UseAuthentication();$/;"	m
-app.UseAuthorization	Program.cs	/^app.UseAuthorization();$/;"	m
-app.UseCors	Program.cs	/^app.UseCors(builder => $/;"	m
+app.UseCors	Program.cs	/^app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());$/;"	m
 applicationUrl	Properties/launchSettings.json	/^      "applicationUrl": "http:\/\/localhost:20720",$/;"	s	object:iisSettings.iisExpress
 applicationUrl	Properties/launchSettings.json	/^      "applicationUrl": "http:\/\/localhost:5000",$/;"	s	object:profiles.GoalsApi
 assemblyVersion	bin/Debug/net6.0/GoalsApi.deps.json	/^            "assemblyVersion": "1.2.3.0",$/;"	s	object:targets..NETCoreApp,Version=v6.0.Microsoft.OpenApi/1.2.3.runtime.lib/netstandard2.0/Microsoft.OpenApi.dll
@@ -1463,7 +1474,10 @@ compile	obj/project.assets.json	/^        "compile": {$/;"	o	object:targets.net6
 configFilePaths	obj/GoalsApi.csproj.nuget.dgspec.json	/^        "configFilePaths": [$/;"	a	object:projects./home/pedro/programming/mycode/goals/GoalsApi/GoalsApi.csproj.restore
 configFilePaths	obj/project.assets.json	/^      "configFilePaths": [$/;"	a	object:project.restore
 configProperties	bin/Debug/net6.0/GoalsApi.runtimeconfig.json	/^    "configProperties": {$/;"	o	object:runtimeOptions
+configuration	Controllers/GoalsController.cs	/^    private readonly IConfiguration configuration;$/;"	f	class:GoalsController	file:
 configuration	Controllers/UsersController.cs	/^    private readonly IConfiguration configuration;$/;"	f	class:UsersController	file:
+configuration	Utils/ConnectionManager.cs	/^    public static NpgsqlConnection GetConnectionFromConfig(IConfiguration configuration) =>$/;"	f	class:ConnectionManager
+connection	DataAccess/Dapper/DapperGoalDataAccess.cs	/^    private readonly IDbConnection connection;$/;"	f	class:DapperGoalDataAccess	file:
 connection	DataAccess/Dapper/DapperUserDataAccess.cs	/^    private readonly IDbConnection connection;$/;"	f	class:DapperUserDataAccess	file:
 created_at	SQL/0001-create-table.sql	/^    created_at TIMESTAMP DEFAULT now(),$/;"	E	table:goals
 created_at	SQL/0001-create-table.sql	/^    created_at TIMESTAMP DEFAULT now(),$/;"	E	table:users
@@ -1621,8 +1635,8 @@ frameworks	obj/GoalsApi.csproj.nuget.dgspec.json	/^        "frameworks": {$/;"	o
 frameworks	obj/GoalsApi.csproj.nuget.dgspec.json	/^      "frameworks": {$/;"	o	object:projects./home/pedro/programming/mycode/goals/GoalsApi/GoalsApi.csproj
 frameworks	obj/project.assets.json	/^      "frameworks": {$/;"	o	object:project.restore
 frameworks	obj/project.assets.json	/^    "frameworks": {$/;"	o	object:project
+goalDataAccess	UseCases/Goals/AddGoalUseCase.cs	/^    private readonly GoalDataAccess goalDataAccess;$/;"	f	class:AddGoalUseCase	file:
 goals	SQL/0001-create-table.sql	/^CREATE TABLE goals ($/;"	t
-goalsUseCases	Controllers/GoalsController.cs	/^    private readonly GoalsUseCases goalsUseCases;$/;"	f	class:GoalsController	file:
 hasTools	obj/project.assets.json	/^      "hasTools": true,$/;"	b	object:libraries.Microsoft.Extensions.ApiDescription.Server/3.0.0
 hashPath	bin/Debug/net6.0/GoalsApi.deps.json	/^      "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"$/;"	s	object:libraries.BCrypt.Net-Next/4.0.3
 hashPath	bin/Debug/net6.0/GoalsApi.deps.json	/^      "hashPath": "dapper.2.0.123.nupkg.sha512"$/;"	s	object:libraries.Dapper/2.0.123
@@ -2395,6 +2409,7 @@ type	obj/project.assets.json	/^      "type": "package",$/;"	s	object:libraries.S
 type	obj/project.assets.json	/^      "type": "package",$/;"	s	object:libraries.System.Security.Permissions/4.5.0
 type	obj/project.assets.json	/^      "type": "package",$/;"	s	object:libraries.System.Security.Principal.Windows/4.5.0
 type	obj/project.assets.json	/^      "type": "package",$/;"	s	object:libraries.System.Text.Encodings.Web/4.5.0
+userDataAccess	UseCases/Goals/AddGoalUseCase.cs	/^    private readonly UserDataAccess userDataAccess;$/;"	f	class:AddGoalUseCase	file:
 userDataAccess	UseCases/Users/SignInUserUseCase.cs	/^    private readonly UserDataAccess userDataAccess;$/;"	f	class:SignInUserUseCase	file:
 userDataAccess	UseCases/Users/SignUpUserUseCase.cs	/^    private readonly UserDataAccess userDataAccess;$/;"	f	class:SignUpUserUseCase	file:
 userDataAccess	UseCases/Users/VerifyTokenUseCase.cs	/^    private readonly UserDataAccess userDataAccess;$/;"	f	class:VerifyTokenUseCase	file:

@@ -46,10 +46,10 @@ public class GoalsController : ControllerBase
     // @Desc Get all goals from user
     // @Route GET api/goals/user/123
     // @Access private
-    [HttpGet("user/{userId}")]
+    [HttpGet("user/123")]
     public ActionResult GetGoals(Guid userId)
     {
-        return Ok();
+        return Ok("Hello get goals");
     }
 
     // @Desc Get all goals

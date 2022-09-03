@@ -17,7 +17,6 @@ public class ConnectionManager
         try {
             connection.Open();
         } catch (System.Exception e) {
-            System.Console.WriteLine(e.StackTrace);
             throw new Exception("Error to open the database connection");
         }
     }
@@ -27,7 +26,6 @@ public class ConnectionManager
         try {
             if (connection.State == ConnectionState.Open) connection.Close();
         } catch (System.Exception e) {
-            System.Console.WriteLine(e.StackTrace);
             throw new Exception("Error to close the database connection");
         }
 

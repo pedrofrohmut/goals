@@ -37,8 +37,6 @@ public class MicrosoftJwtService : JwtService
             var token = handler.WriteToken(securityToken);
             return token;
         } catch (Exception e) {
-            System.Console.WriteLine("Error to generate token. " + e.Message);
-            System.Console.WriteLine(e.StackTrace);
             return null;
         }
     }
