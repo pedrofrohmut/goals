@@ -19,4 +19,19 @@ public class DapperGoalDataAccess : GoalDataAccess
         var text = newGoal.Text;
         connection.Query(sql, new { text, userId });
     }
+
+    public IEnumerable<GoalDbDto> GetGoalsByUserId(Guid userId) 
+    {
+        var sql = "SELECT * FROM goals WHERE user_id = @userId";
+        var rows = connection.Query(sql, new { userId });
+        var goals = MapGoalRowsToDtos(rows);
+        return goals;
+    }
+
+    private IEnumerable<GoalDbDto> MapGoalRowsToDtos(IEnumerable<dynamic> rows) =>
+        rows.Select<dynamic, GoalDbDto>(row => new GoalDbDto() {
+            Id = row.id,
+            Text = row.text,
+            UserId = row.user_id
+        });
 }

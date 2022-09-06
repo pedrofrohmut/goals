@@ -34,13 +34,11 @@ public class UsersController : ControllerBase
         try {
             ConnectionManager.OpenConnection(connection);
             signUpUserUseCase.Execute(newUser);
-            return new ObjectResult("Usuario Criado") { StatusCode = StatusCodes.Status201Created };
+            return new ObjectResult("Usuario Criado") { StatusCode = 201 };
         } catch (ArgumentException e) {
-            return BadRequest(e.Message);
+            return new ObjectResult(e.Message) { StatusCode = 400 };
         } catch (Exception e) {
-            return new ObjectResult("Some other error, " + e.Message) { 
-                StatusCode = StatusCodes.Status500InternalServerError 
-            };
+            return new ObjectResult("Some other error, " + e.Message) { StatusCode = 500 };
         } finally {
             ConnectionManager.CloseConnection(connection);
         }
@@ -62,11 +60,11 @@ public class UsersController : ControllerBase
         try {
             ConnectionManager.OpenConnection(connection);
             var signedUser = signInUserUseCase.Execute(credentials);
-            return Ok(signedUser);
+            return new ObjectResult(signedUser) { StatusCode = 200 };
         } catch (ArgumentException e) {
-            return BadRequest(e.Message);
+            return new ObjectResult(e.Message) { StatusCode = 400 };
         } catch (Exception e) {
-            return BadRequest(e.Message);
+            return new ObjectResult("Some other error, " + e.Message) { StatusCode = 500 };
         } finally {
             ConnectionManager.CloseConnection(connection);
         }
@@ -89,13 +87,11 @@ public class UsersController : ControllerBase
         try {
             ConnectionManager.OpenConnection(connection);
             verifyTokenUseCase.Execute(token);
-            return Ok(true);
-        } catch (ArgumentException e) {
-            return Ok(false);
+            return new ObjectResult(true) { StatusCode = 200 };
+        } catch (ArgumentException) {
+            return new ObjectResult(false) { StatusCode = 200 };
         } catch (Exception e) {
-            return new ObjectResult("Server error: " + e.Message) {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
+            return new ObjectResult("Some other error, " + e.Message) { StatusCode = 500 };
         } finally {
             ConnectionManager.CloseConnection(connection);
         }

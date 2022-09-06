@@ -31,13 +31,11 @@ public class GoalsController : ControllerBase
         try {
             ConnectionManager.OpenConnection(connection);
             addGoalUseCase.Execute(newGoal, userId);
-            return new ObjectResult("Goal Criado") { StatusCode = StatusCodes.Status201Created };
+            return new ObjectResult("Goal Criado") { StatusCode = 201 };
         } catch (ArgumentException e) {
-            return BadRequest(e.Message);
+            return new ObjectResult(e.Message) { StatusCode = 400 };
         } catch (Exception e) {
-            return new ObjectResult("Some other error, " + e.Message) { 
-                StatusCode = StatusCodes.Status500InternalServerError 
-            };
+            return new ObjectResult("Some other error, " + e.Message) { StatusCode = 500 };
         } finally {
             ConnectionManager.CloseConnection(connection);
         }
@@ -46,10 +44,25 @@ public class GoalsController : ControllerBase
     // @Desc Get all goals from user
     // @Route GET api/goals/user/123
     // @Access private
-    [HttpGet("user/123")]
-    public ActionResult GetGoals(Guid userId)
+    [HttpGet]
+    public ActionResult GetGoals([FromHeader] string authorization)
     {
-        return Ok("Hello get goals");
+        var userId = TokenManager.GetUserIdFromToken(configuration, authorization);
+        var connection = ConnectionManager.GetConnectionFromConfig(configuration);
+        var userDataAccess = new DapperUserDataAccess(connection);
+        var goalDataAccess = new DapperGoalDataAccess(connection);
+        var getGoalsUseCase = new GetGoalsUseCase(userDataAccess, goalDataAccess);
+        try {
+            ConnectionManager.OpenConnection(connection);
+            var goals = getGoalsUseCase.Execute(userId);
+            return new ObjectResult(goals) { StatusCode = 200 };
+        } catch (ArgumentException e) {
+            return new ObjectResult(e.Message) { StatusCode = 400 };
+        } catch (Exception e) {
+            return new ObjectResult("Some other error, " + e.Message) { StatusCode = 500 };
+        } finally {
+            ConnectionManager.CloseConnection(connection);
+        }
     }
 
     // @Desc Get all goals

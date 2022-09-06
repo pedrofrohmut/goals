@@ -18,7 +18,7 @@ if [ ! $short_url ]; then
 fi
 
 # Use t as 3rd param if you don't want to inform a specif token and use default
-if [ $token == "t" ]; then
+if [ $token ] && [ $token == "t" ]; then
     echo "Using the test token as default. Update test token if not working"
     if [ -e $file ]; then
         # Read file into variable
@@ -32,14 +32,14 @@ case "$short_url" in
     "users")
         if [ $method = "POST" ]; then
             curl "$BASE_URL/users" \
-            --header 'Content-Type: application/json' \
-            --data \
-            '{
-                 "name":"Jane Doe",
-                 "email":"jane@doe.com",
-                 "password":"1234",
-                 "phone":"123-456-7890"
-            }'
+                --header 'Content-Type: application/json' \
+                --data \
+                '{
+                     "name":"Jane Doe",
+                     "email":"jane@doe.com",
+                     "password":"1234",
+                     "phone":"123-456-7890"
+                }'
             exit 1
         fi
         ;;
@@ -48,12 +48,12 @@ case "$short_url" in
     "users/signin")
         if [ $method = "POST" ]; then
             curl "$BASE_URL/users/signin" \
-            --header 'Content-Type: application/json' \
-            --data \
-            '{
-                "email": "john@doe.com",
-                "password": "1234"
-            }'
+                --header 'Content-Type: application/json' \
+                --data \
+                '{
+                    "email": "john@doe.com",
+                    "password": "1234"
+                }'
             exit 1
         fi
         ;;
@@ -62,19 +62,25 @@ case "$short_url" in
     "users/verify")
         if [ $method = "GET" ]; then
             curl "$BASE_URL/users/verify" \
-            --header 'Content-Type: application/json' \
-            --header "Authorization: Bearer $token"
+                --header 'Content-Type: application/json' \
+                --header "Authorization: Bearer $token"
             exit 1
         fi
         ;;
 
     # Add a goal
     "goals")
+        if [ $method = "GET" ]; then
+            curl "$BASE_URL/goals" \
+                --header 'Content-Type: application/json' \
+                --header "Authorization: Bearer $token"
+            exit 1
+        fi
         if [ $method = "POST" ]; then
             curl "$BASE_URL/goals" \
-            --header 'Content-Type: application/json' \
-            --header "Authorization: Bearer $token" \
-            --data '{ "text": "My First Goal" }'
+                --header 'Content-Type: application/json' \
+                --header "Authorization: Bearer $token" \
+                --data '{ "text": "My First Goal" }'
             exit 1
         fi
         ;;
