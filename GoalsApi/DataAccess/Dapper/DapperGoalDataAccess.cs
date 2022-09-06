@@ -34,4 +34,10 @@ public class DapperGoalDataAccess : GoalDataAccess
             Text = row.text,
             UserId = row.user_id
         });
+
+    public void DeleteGoalById(Guid goalId) 
+    {
+        var sql = "DELETE FROM goals WHERE id = @goalId";
+        connection.Query(sql, new { goalId });
+    }
 }

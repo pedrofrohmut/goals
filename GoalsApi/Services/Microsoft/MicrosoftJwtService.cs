@@ -36,7 +36,7 @@ public class MicrosoftJwtService : JwtService
             var securityToken = handler.CreateToken(descriptor);
             var token = handler.WriteToken(securityToken);
             return token;
-        } catch (Exception e) {
+        } catch (Exception) {
             return null;
         }
     }

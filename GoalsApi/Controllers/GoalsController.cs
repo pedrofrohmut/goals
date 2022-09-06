@@ -71,15 +71,30 @@ public class GoalsController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult UpdateGoal(Guid id)
     {
-        return Ok();
+        return Ok("Not implemented");
     }
 
     // @Desc Get all goals
     // @Route POST api/goals
     // @Access private
     [HttpDelete("{id}")]
-    public ActionResult DeleteGoal(Guid id)
+    public ActionResult DeleteGoal([FromHeader] string authorization, Guid id)
     {
-        return Ok();
+        var userId = TokenManager.GetUserIdFromToken(configuration, authorization);
+        var connection = ConnectionManager.GetConnectionFromConfig(configuration);
+        var userDataAccess = new DapperUserDataAccess(connection);
+        var goalDataAccess = new DapperGoalDataAccess(connection);
+        var deleteGoalUseCase = new DeleteGoalUseCase(userDataAccess, goalDataAccess);
+        try {
+            ConnectionManager.OpenConnection(connection);
+            deleteGoalUseCase.Execute(id, userId);
+            return new ObjectResult("") { StatusCode = 204 };
+        } catch (ArgumentException e) {
+            return new ObjectResult(e.Message) { StatusCode = 400 };
+        } catch (Exception e) {
+            return new ObjectResult("Some other error, " + e.Message) { StatusCode = 500 };
+        } finally {
+            ConnectionManager.CloseConnection(connection);
+        }
     }
 }
